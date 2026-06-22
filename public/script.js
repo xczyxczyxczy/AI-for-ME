@@ -5,6 +5,8 @@ const statusText = document.querySelector("#status");
 const submitButton = document.querySelector("#submitButton");
 const clearButton = document.querySelector("#clearButton");
 const examples = document.querySelectorAll(".example");
+const apiBaseUrl = (window.APP_CONFIG?.apiBaseUrl || "").replace(/\/$/, "");
+const isGitHubPages = window.location.hostname.endsWith("github.io");
 
 function escapeHtml(value) {
   return value
@@ -150,7 +152,13 @@ function setLoading(isLoading) {
 }
 
 async function askQuestion(question) {
-  const response = await fetch("/api/ask", {
+  if (isGitHubPages && !apiBaseUrl) {
+    throw new Error(
+      "网页已部署到 GitHub Pages，但线上问答后端尚未配置。请先设置仓库变量 API_BASE_URL。"
+    );
+  }
+
+  const response = await fetch(`${apiBaseUrl}/api/ask`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
