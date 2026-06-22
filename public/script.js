@@ -8,6 +8,7 @@ const clearButton = document.querySelector("#clearButton");
 const examples = document.querySelectorAll(".example");
 const deepSeekApiUrl = "https://api.deepseek.com/chat/completions";
 const deepSeekModel = "deepseek-v4-flash";
+const katexFallbackUrl = "https://unpkg.com/katex@0.16.11/dist/katex.min.js";
 const systemPrompt = `
 你是“微电子学习问答助手”，服务对象是正在学习微电子、集成电路与半导体基础课程的学生。
 回答范围只包括：
@@ -26,6 +27,19 @@ const systemPrompt = `
 - 如果用户问题明显超出微电子学习范围，礼貌拒绝，并引导用户改问微电子相关问题。
 - 不回答违法、作弊、攻击、隐私窃取等不当请求。
 `.trim();
+
+function loadKatexFallback() {
+  if (window.katex || document.querySelector('script[data-katex-fallback="true"]')) {
+    return;
+  }
+
+  const script = document.createElement("script");
+  script.src = katexFallbackUrl;
+  script.dataset.katexFallback = "true";
+  document.head.append(script);
+}
+
+loadKatexFallback();
 
 function escapeHtml(value) {
   return value
