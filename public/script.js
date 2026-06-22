@@ -19,6 +19,7 @@ const systemPrompt = `
 - 使用中文，结构清晰，适合课程学习。
 - 可以使用 Markdown 输出小标题、列表、公式说明和代码块，让网页更容易阅读。
 - 优先给出概念解释、关键公式含义、直观理解和常见误区。
+- 如果可以，从不同学科的视角解释问题，帮助用户建立跨学科理解。
 - 遇到不完整问题时，先说明可能的理解，再给出通用解释，并提示用户补充上下文。
 - 不编造教材页码、论文、实验数据或不存在的课程资料。
 - 如果用户问题明显超出微电子学习范围，礼貌拒绝，并引导用户改问微电子相关问题。
@@ -210,7 +211,7 @@ function appendMessage(role, text, type = "normal") {
 function setLoading(isLoading) {
   submitButton.disabled = isLoading;
   submitButton.textContent = isLoading ? "生成中..." : "提交问题";
-  statusText.textContent = isLoading ? "正在调用 DeepSeek API，请稍候。" : "";
+  statusText.textContent = isLoading ? "正在思考，请稍候。" : "";
 }
 
 async function askQuestion(question, apiKey) {
