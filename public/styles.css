@@ -183,19 +183,98 @@ textarea:focus {
 
 .answer {
   min-height: 180px;
-  white-space: pre-wrap;
   border-radius: 8px;
   background: #f7fafb;
   padding: 16px;
   color: #22383b;
   line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.answer.markdown > *:first-child {
+  margin-top: 0;
+}
+
+.answer.markdown > *:last-child {
+  margin-bottom: 0;
+}
+
+.answer h3,
+.answer h4,
+.answer h5 {
+  margin: 18px 0 8px;
+  color: #142326;
+  line-height: 1.35;
+}
+
+.answer h3 {
+  font-size: 1.12rem;
+}
+
+.answer h4,
+.answer h5 {
+  font-size: 1rem;
+}
+
+.answer p,
+.answer ul,
+.answer ol,
+.answer blockquote,
+.answer pre {
+  margin: 0 0 12px;
+}
+
+.answer ul,
+.answer ol {
+  padding-left: 1.4rem;
+}
+
+.answer li + li {
+  margin-top: 4px;
+}
+
+.answer blockquote {
+  border-left: 4px solid #9bbfc3;
+  padding: 8px 12px;
+  background: #eef6f7;
+  color: #3c5559;
+}
+
+.answer code {
+  border-radius: 5px;
+  background: #e8eff0;
+  padding: 2px 5px;
+  font-family: Consolas, "Liberation Mono", monospace;
+  font-size: 0.94em;
+}
+
+.answer pre {
+  overflow-x: auto;
+  border: 1px solid #d4e0e2;
+  border-radius: 8px;
+  background: #102326;
+  padding: 12px;
+  color: #f2fbfb;
+}
+
+.answer pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.answer a {
+  color: #1f7378;
+  font-weight: 700;
 }
 
 .answer.empty {
+  white-space: pre-wrap;
   color: #7a8b8e;
 }
 
 .answer.error {
+  white-space: pre-wrap;
   background: #fff4f0;
   color: #9d2d1b;
 }
