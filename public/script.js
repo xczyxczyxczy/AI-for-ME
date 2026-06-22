@@ -18,6 +18,7 @@ const systemPrompt = `
 回答要求：
 - 使用中文，结构清晰，适合课程学习。
 - 可以使用 Markdown 输出小标题、列表、公式说明和代码块，让网页更容易阅读。
+- 涉及公式时，优先使用 LaTeX 格式，例如行内公式 $I_D$，块级公式 $$V_T=V_{T0}+\gamma(\sqrt{2\phi_F+V_{SB}}-\sqrt{2\phi_F})$$。
 - 优先给出概念解释、关键公式含义、直观理解和常见误区。
 - 如果可以，从不同学科的视角解释问题，帮助用户建立跨学科理解。
 - 遇到不完整问题时，先说明可能的理解，再给出通用解释，并提示用户补充上下文。
@@ -44,13 +45,56 @@ function safeUrl(value) {
   }
 }
 
+function renderFormula(value, displayMode = false) {
+  if (!window.katex) {
+    const open = displayMode ? "$$" : "$";
+    return `${open}${escapeHtml(value)}${open}`;
+  }
+
+  try {
+    return window.katex.renderToString(value, {
+      displayMode,
+      throwOnError: false,
+      strict: false,
+      trust: false
+    });
+  } catch {
+    const open = displayMode ? "$$" : "$";
+    return `${open}${escapeHtml(value)}${open}`;
+  }
+}
+
+function renderInlineMath(value) {
+  const pattern = /\\\((.+?)\\\)|(^|[^$])\$([^\n$]+?)\$(?!\$)/g;
+  let html = "";
+  let lastIndex = 0;
+  let match;
+
+  while ((match = pattern.exec(value)) !== null) {
+    if (match[1] !== undefined) {
+      html += escapeHtml(value.slice(lastIndex, match.index));
+      html += renderFormula(match[1]);
+    } else {
+      const prefix = match[2] || "";
+      html += escapeHtml(value.slice(lastIndex, match.index) + prefix);
+      html += renderFormula(match[3]);
+    }
+    lastIndex = match.index + match[0].length;
+  }
+
+  html += escapeHtml(value.slice(lastIndex));
+  return html;
+}
+
 function renderInlineMarkdown(value) {
   const codeSpans = [];
-  let html = escapeHtml(value).replace(/`([^`]+)`/g, (_match, code) => {
+  let html = value.replace(/`([^`]+)`/g, (_match, code) => {
     const token = `@@CODE_SPAN_${codeSpans.length}@@`;
-    codeSpans.push(`<code>${code}</code>`);
+    codeSpans.push(`<code>${escapeHtml(code)}</code>`);
     return token;
   });
+
+  html = renderInlineMath(html);
 
   html = html
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_match, text, url) => {
@@ -90,6 +134,27 @@ function renderMarkdown(markdown) {
       }
       index += 1;
       blocks.push(`<pre><code${language}>${escapeHtml(codeLines.join("\n"))}</code></pre>`);
+      continue;
+    }
+
+    const mathFence = line.match(/^\s*(?:\$\$|\\\[)\s*$/);
+    if (mathFence) {
+      const closePattern = line.includes("$$") ? /^\s*\$\$\s*$/ : /^\s*\\\]\s*$/;
+      const formulaLines = [];
+      index += 1;
+      while (index < lines.length && !closePattern.test(lines[index])) {
+        formulaLines.push(lines[index]);
+        index += 1;
+      }
+      index += 1;
+      blocks.push(`<div class="math-block">${renderFormula(formulaLines.join("\n"), true)}</div>`);
+      continue;
+    }
+
+    const singleLineMath = line.match(/^\s*\$\$\s*(.+?)\s*\$\$\s*$/);
+    if (singleLineMath) {
+      blocks.push(`<div class="math-block">${renderFormula(singleLineMath[1], true)}</div>`);
+      index += 1;
       continue;
     }
 
