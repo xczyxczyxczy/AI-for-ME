@@ -309,7 +309,7 @@ async function askQuestion(question, apiKey) {
           { role: "user", content: question }
         ],
         temperature: 0.3,
-        max_tokens: 900,
+        max_tokens: 2000,
         stream: false
       })
     });
