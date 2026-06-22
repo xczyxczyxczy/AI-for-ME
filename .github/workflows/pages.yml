@@ -27,14 +27,6 @@ jobs:
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      - name: Configure API endpoint
-        env:
-          API_BASE_URL: ${{ vars.API_BASE_URL }}
-        run: >-
-          node -e "require('fs').writeFileSync('public/config.js',
-          'window.APP_CONFIG = ' + JSON.stringify({ apiBaseUrl:
-          process.env.API_BASE_URL || '' }) + ';\n')"
-
       - name: Upload frontend
         uses: actions/upload-pages-artifact@v3
         with:

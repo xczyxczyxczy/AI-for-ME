@@ -1,32 +1,28 @@
 # GitHub Pages 部署
 
-推送 `main` 分支后，GitHub Actions 会把 `public` 目录自动发布到：
+本项目现在采用纯前端方式部署到 GitHub Pages。用户在网页中自行填写
+DeepSeek API Key，浏览器直接调用 DeepSeek Chat API，不再需要单独部署
+Node.js 后端。
+
+线上访问地址：
 
 ```text
 https://ai-for-me.xiaocaiziyou.top/
 ```
 
-GitHub Pages 只托管静态网页，不能运行 `server.js`，也不能安全保存
-`DEEPSEEK_API_KEY`。因此线上问答功能还需要一个单独部署的 Node.js 后端。
+## 部署流程
 
-后端部署完成后，在仓库的 **Settings > Secrets and variables > Actions >
-Variables** 中创建：
+推送 `main` 分支后，GitHub Actions 会把 `public` 目录自动发布到 GitHub
+Pages。
 
-```text
-API_BASE_URL=https://你的后端域名
-```
-
-重新运行 `Deploy frontend to GitHub Pages` 工作流后，网页会把问题发送到：
+仓库 Pages 设置：
 
 ```text
-https://你的后端域名/api/ask
+Source：GitHub Actions
+Custom domain：ai-for-me.xiaocaiziyou.top
 ```
 
-本地运行不需要设置该变量，仍使用 `http://localhost:3000/api/ask`。
-
-## 自定义域名
-
-在域名服务商的 DNS 控制台添加一条记录：
+域名 DNS 设置：
 
 ```text
 记录类型：CNAME
@@ -34,6 +30,17 @@ https://你的后端域名/api/ask
 记录值：xczyxczyxczy.github.io
 ```
 
-然后在 GitHub 仓库的 **Settings > Pages > Custom domain** 中填写
-`ai-for-me.xiaocaiziyou.top`，保存并等待 DNS 检查通过。最后启用
-**Enforce HTTPS**。
+DNS 检查通过后启用 **Enforce HTTPS**。
+
+## 使用说明
+
+1. 打开线上网页。
+2. 在 `DeepSeek API Key` 输入框中填入自己的 Key。
+3. 输入微电子学习问题。
+4. 网页会直接请求 DeepSeek API 并渲染 Markdown 回答。
+
+API Key 只存在于当前网页表单中，本项目不会把它提交到 Git 仓库，也不会默认保存到浏览器本地存储。
+
+## 注意事项
+
+纯前端直连 API 会把用户填写的 API Key 暴露给当前浏览器环境，因此只适合课程演示或个人学习使用。若要做正式产品，仍建议使用后端代理保护 API Key。

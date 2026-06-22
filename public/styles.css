@@ -20,6 +20,7 @@ body {
 }
 
 button,
+input,
 textarea {
   font: inherit;
 }
@@ -116,6 +117,33 @@ label {
   font-weight: 700;
 }
 
+.api-key-row {
+  display: grid;
+  gap: 8px;
+}
+
+input {
+  width: 100%;
+  border: 1px solid #bed1d3;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #fbfdfd;
+  color: #142326;
+  outline: none;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #28767b;
+  box-shadow: 0 0 0 3px rgba(40, 118, 123, 0.14);
+}
+
+.key-note {
+  margin: 0;
+  color: #687a7d;
+  font-size: 0.9rem;
+}
+
 textarea {
   width: 100%;
   min-height: 142px;
@@ -127,11 +155,6 @@ textarea {
   color: #142326;
   line-height: 1.7;
   outline: none;
-}
-
-textarea:focus {
-  border-color: #28767b;
-  box-shadow: 0 0 0 3px rgba(40, 118, 123, 0.14);
 }
 
 .actions,

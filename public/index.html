@@ -23,6 +23,18 @@
         </div>
 
         <form id="askForm" class="question-box">
+          <div class="api-key-row">
+            <label for="apiKey">DeepSeek API Key</label>
+            <input
+              id="apiKey"
+              name="apiKey"
+              type="password"
+              autocomplete="off"
+              placeholder="请输入你的 DeepSeek API Key"
+            />
+            <p class="key-note">API Key 只在本次页面中使用，不会保存到仓库。</p>
+          </div>
+
           <label for="question">输入你的微电子学习问题</label>
           <textarea
             id="question"
@@ -46,7 +58,6 @@
       </section>
     </main>
 
-    <script src="./config.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
