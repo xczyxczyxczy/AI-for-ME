@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>微电子学习问答助手</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="workspace" aria-label="微电子学习问答助手">
+        <div class="intro">
+          <p class="eyebrow">DeepSeek API + Prompt 工程</p>
+          <h1>微电子学习问答助手</h1>
+          <p class="subtitle">
+            聚焦半导体器件、CMOS 电路、集成电路基础和工艺入门，帮助你把课程概念讲清楚。
+          </p>
+        </div>
+
+        <div class="examples" aria-label="示例问题">
+          <button type="button" class="example">MOSFET 的工作原理是什么？</button>
+          <button type="button" class="example">CMOS 反相器为什么静态功耗低？</button>
+          <button type="button" class="example">请解释 PN 结的内建电场。</button>
+          <button type="button" class="example">短沟道效应为什么会影响阈值电压？</button>
+          <button type="button" class="example">版图设计中 DRC 和 LVS 分别是什么？</button>
+        </div>
+
+        <form id="askForm" class="question-box">
+          <label for="question">输入你的微电子学习问题</label>
+          <textarea
+            id="question"
+            name="question"
+            rows="5"
+            placeholder="例如：MOSFET 的阈值电压受哪些因素影响？"
+          ></textarea>
+          <div class="actions">
+            <span id="status" class="status" role="status"></span>
+            <button id="submitButton" type="submit">提交问题</button>
+          </div>
+        </form>
+
+        <section class="answer-panel" aria-live="polite">
+          <div class="answer-header">
+            <h2>回答结果</h2>
+            <button id="clearButton" type="button" class="secondary">清空</button>
+          </div>
+          <div id="answer" class="answer empty">
+            这里会显示 DeepSeek 根据微电子限定 Prompt 返回的回答。
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

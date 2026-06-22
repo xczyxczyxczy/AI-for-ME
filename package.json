@@ -1,0 +1,26 @@
+{
+  "name": "microelectronics-qa-assistant",
+  "version": "1.0.0",
+  "description": "A DeepSeek-powered microelectronics learning Q&A assistant with a web UI.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.3"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "microelectronics",
+    "deepseek",
+    "llm",
+    "education"
+  ],
+  "license": "MIT"
+}
