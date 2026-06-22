@@ -24,7 +24,10 @@
 
         <form id="askForm" class="question-box">
           <div class="api-key-row">
-            <label for="apiKey">DeepSeek API Key</label>
+            <div>
+              <label for="apiKey">DeepSeek API Key</label>
+              <p class="key-note">仅用于本次浏览器会话，不会保存到仓库。</p>
+            </div>
             <input
               id="apiKey"
               name="apiKey"
@@ -32,7 +35,6 @@
               autocomplete="off"
               placeholder="请输入你的 DeepSeek API Key"
             />
-            <p class="key-note">API Key 只在本次页面中使用，不会保存到仓库。</p>
           </div>
 
           <label for="question">输入你的微电子学习问题</label>
@@ -48,12 +50,17 @@
           </div>
         </form>
 
-        <section class="answer-panel" aria-live="polite">
-          <div class="answer-header">
-            <h2>回答</h2>
+        <section class="chat-panel" aria-live="polite">
+          <div class="chat-header">
+            <h2>对话</h2>
             <button id="clearButton" type="button" class="secondary">清空</button>
           </div>
-          <div id="answer" class="answer empty">学习愉快！</div>
+          <div id="chatLog" class="chat-log">
+            <article class="message assistant-message empty-message">
+              <div class="message-meta">助手</div>
+              <div class="message-bubble">学习愉快！</div>
+            </article>
+          </div>
         </section>
       </section>
     </main>

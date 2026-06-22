@@ -1,7 +1,7 @@
 const form = document.querySelector("#askForm");
 const apiKeyInput = document.querySelector("#apiKey");
 const questionInput = document.querySelector("#question");
-const answerBox = document.querySelector("#answer");
+const chatLog = document.querySelector("#chatLog");
 const statusText = document.querySelector("#status");
 const submitButton = document.querySelector("#submitButton");
 const clearButton = document.querySelector("#clearButton");
@@ -150,16 +150,61 @@ function renderMarkdown(markdown) {
   return blocks.join("");
 }
 
-function setAnswer(text, type = "normal") {
-  answerBox.classList.toggle("empty", type === "empty");
-  answerBox.classList.toggle("error", type === "error");
-  answerBox.classList.toggle("markdown", type === "normal");
+function clearChat() {
+  chatLog.innerHTML = `
+    <article class="message assistant-message empty-message">
+      <div class="message-meta">助手</div>
+      <div class="message-bubble">学习愉快！</div>
+    </article>
+  `;
+}
 
-  if (type === "normal") {
-    answerBox.innerHTML = renderMarkdown(text);
-  } else {
-    answerBox.textContent = text;
+async function copyText(text, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    button.textContent = "已复制";
+    setTimeout(() => {
+      button.textContent = "复制";
+    }, 1400);
+  } catch {
+    button.textContent = "复制失败";
+    setTimeout(() => {
+      button.textContent = "复制";
+    }, 1400);
   }
+}
+
+function appendMessage(role, text, type = "normal") {
+  chatLog.querySelector(".empty-message")?.remove();
+
+  const message = document.createElement("article");
+  message.className = `message ${role}-message ${type === "error" ? "error-message" : ""}`;
+
+  const meta = document.createElement("div");
+  meta.className = "message-meta";
+  meta.textContent = role === "user" ? "你" : "助手";
+
+  const bubble = document.createElement("div");
+  bubble.className = `message-bubble ${type === "normal" && role === "assistant" ? "markdown" : ""}`;
+  if (type === "normal" && role === "assistant") {
+    bubble.innerHTML = renderMarkdown(text);
+  } else {
+    bubble.textContent = text;
+  }
+
+  message.append(meta, bubble);
+
+  if (role === "assistant" && type === "normal") {
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.className = "copy-button";
+    copyButton.textContent = "复制";
+    copyButton.addEventListener("click", () => copyText(text, copyButton));
+    message.append(copyButton);
+  }
+
+  chatLog.append(message);
+  message.scrollIntoView({ behavior: "smooth", block: "end" });
 }
 
 function setLoading(isLoading) {
@@ -209,39 +254,50 @@ async function askQuestion(question, apiKey) {
   return answer;
 }
 
-form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
+async function handleAsk() {
   const apiKey = apiKeyInput.value.trim();
   const question = questionInput.value.trim();
   if (!apiKey) {
-    setAnswer("请输入你的 DeepSeek API Key 后再提交。", "error");
+    appendMessage("assistant", "请输入你的 DeepSeek API Key 后再提交。", "error");
     apiKeyInput.focus();
     return;
   }
 
   if (!question) {
-    setAnswer("请输入一个微电子相关问题后再提交。", "error");
+    appendMessage("assistant", "请输入一个微电子相关问题后再提交。", "error");
     questionInput.focus();
     return;
   }
 
+  appendMessage("user", question, "plain");
   setLoading(true);
-  setAnswer("正在整理课程化回答...", "empty");
+  appendMessage("assistant", "正在整理课程化回答...", "plain");
 
   try {
     const answer = await askQuestion(question, apiKey);
-    setAnswer(answer);
+    chatLog.lastElementChild?.remove();
+    appendMessage("assistant", answer);
   } catch (error) {
-    setAnswer(error.message, "error");
+    chatLog.lastElementChild?.remove();
+    appendMessage("assistant", error.message, "error");
   } finally {
     setLoading(false);
   }
+}
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  await handleAsk();
+});
+
+submitButton.addEventListener("click", async (event) => {
+  event.preventDefault();
+  await handleAsk();
 });
 
 clearButton.addEventListener("click", () => {
   questionInput.value = "";
-  setAnswer("学习愉快！", "empty");
+  clearChat();
   statusText.textContent = "";
   questionInput.focus();
 });
