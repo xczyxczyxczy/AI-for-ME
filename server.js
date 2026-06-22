@@ -73,7 +73,8 @@ app.post("/api/ask", async (req, res) => {
           { role: "user", content: question }
         ],
         temperature: 0.3,
-        max_tokens: 900
+        max_tokens: 900,
+        stream: false
       })
     });
 

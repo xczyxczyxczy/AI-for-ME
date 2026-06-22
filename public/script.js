@@ -61,7 +61,7 @@ form.addEventListener("submit", async (event) => {
 
 clearButton.addEventListener("click", () => {
   questionInput.value = "";
-  setAnswer("这里会显示 DeepSeek 根据微电子限定 Prompt 返回的回答。", "empty");
+  setAnswer("学习愉快！", "empty");
   statusText.textContent = "";
   questionInput.focus();
 });

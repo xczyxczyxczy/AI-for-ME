@@ -18,7 +18,7 @@
 ## 模型使用方式
 
 - 模型来源：DeepSeek 云端 API。
-- 默认模型：`deepseek-chat`。
+- 默认模型：`deepseek-v4-flash`。
 - 使用方式：API 调用 + Prompt 工程。
 - Prompt 限制：回答范围限定在半导体物理、器件、CMOS 电路、版图与工艺基础、数字/模拟电路相关课程知识。
 - 安全设计：API Key 只保存在后端 `.env` 文件中，不暴露给浏览器。
@@ -41,7 +41,7 @@ copy .env.example .env
 
 ```bash
 DEEPSEEK_API_KEY=你的DeepSeek API Key
-DEEPSEEK_MODEL=deepseek-chat
+DEEPSEEK_MODEL=deepseek-v4-flash
 PORT=3000
 ```
 
